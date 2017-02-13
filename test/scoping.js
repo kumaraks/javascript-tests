@@ -3,8 +3,8 @@ describe('scoping', function () {
     var mod = new Module(),
         request;
 
-    request = function (callback) {
-      return callback();
+    request = function (i,callback) {
+      return callback(i);
     };
 
     function Module () {
@@ -15,10 +15,13 @@ describe('scoping', function () {
       return this.foo;
     };
 
-    Module.prototype.req = function() {
-      return request(this.method);
+    Module.prototype.req = function(callback) {
+      return request(this.method(),callback);
     };
-
-    expect(mod.req()).toBe('bar');
+    mod.req(callback);
+    function callback(res){
+          expect(res).toBe('bar');
+    }
+    
   });
 });
